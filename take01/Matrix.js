@@ -72,6 +72,33 @@ class Matrix {
     }
   }
 
+  // returns the subtraction result of two matrices:
+  sub(n) {
+    // if n is another matrix:
+    if (n instanceof Matrix) {
+      if (n.rows !== this.rows || n.cols !== this.cols) {
+        console.log("invalid matrix to add with!");
+        return undefined;
+      }
+
+      // matrix subtraction:
+      for (let i = 0; i < this.rows; i++) {
+        for (let j = 0; j < this.cols; j++) {
+          this.data[i][j] -= n.data[i][j];
+        }
+      }
+
+      return true;
+    }
+
+    // if n is a number:
+    for (let i = 0; i < this.rows; i++) {
+      for (let j = 0; j < this.cols; j++) {
+        this.data[i][j] -= n;
+      }
+    }
+  }
+
   // return the multiplication result:
   mult(n) {
     // if n is another matrix:
@@ -106,6 +133,10 @@ class Matrix {
   /////////// STATIC FUNCTIONS ///////////
   // array -> matrix:
   static fromArray(arr) {
+    if (!arr[0].length) {
+      arr = [arr];
+    }
+
     let res = new Matrix(arr.length, arr[0]?.length);
     res.data = [...arr];
 
@@ -155,6 +186,36 @@ class Matrix {
     for (let i = 0; i < a.rows; i++) {
       for (let j = 0; j < a.cols; j++) {
         res.data[i][j] = a.data[i][j] + b;
+      }
+    }
+    return res;
+  }
+
+  // returns the subtraction result of two matrices:
+  static sub(a, b) {
+    // if b is another matrix:
+    if (b instanceof Matrix) {
+      if (b.rows !== a.rows || b.cols !== a.cols) {
+        console.log("invalid matrix to add with!");
+        return a;
+      }
+
+      let res = new Matrix(a.rows, a.cols);
+      // matrix subtraction:
+      for (let i = 0; i < a.rows; i++) {
+        for (let j = 0; j < a.cols; j++) {
+          res.data[i][j] = a.data[i][j] - b.data[i][j];
+        }
+      }
+      return res;
+    }
+
+    // if b is a number:
+    let res = new Matrix(a.rows, a.cols);
+
+    for (let i = 0; i < a.rows; i++) {
+      for (let j = 0; j < a.cols; j++) {
+        res.data[i][j] = a.data[i][j] - b;
       }
     }
     return res;

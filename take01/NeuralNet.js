@@ -2,7 +2,7 @@ function sigmoid(x) {
   return 1 / (1 + Math.exp(-x));
 }
 
-class NeuralNetwork {
+class NeuralNet {
   constructor(inputSize, hiddenSize, outputSize) {
     this.inputSize = inputSize;
     this.hiddenSize = hiddenSize;
@@ -37,18 +37,35 @@ class NeuralNetwork {
 
     // GENERATING FINAL OUTPUT
     // weighted sum in output layer/layers:
-    let y = Matrix.mult(this.hiddenWeights, hidden);
+    let yPredicted = Matrix.mult(this.hiddenWeights, hidden);
     // add output bias:
-    y.add(this.outputBias);
+    yPredicted.add(this.outputBias);
     // activation function:
-    y.map(sigmoid);
+    yPredicted.map(sigmoid);
 
-    // clean output:
-    y.transpose();
-    let Y = Matrix.toArray(y)[0];
+    // cleaning outputs:
+    yPredicted.transpose();
+    let Y = Matrix.toArray(yPredicted)[0];
 
     return Y;
   }
 
-  train(inputs, answers) {}
+  train(X, Y) {
+    // feed forward:
+    let yPredicted = this.forward(X);
+
+    // convert outputs to matrix:
+    yPredicted = Matrix.fromArray(yPredicted);
+    Y = Matrix.fromArray(Y);
+
+    // CALCULATE THE ERRORS
+    // output error = labels - y_predicted:
+    let outputErrors = Matrix.sub(Y, yPredicted);
+
+    // hidden error = hidden weights(transposed) * output errors:
+    let hiddenErrors = Matrix.mult(
+      Matrix.transpose(this.hiddenWeights),
+      Matrix.transpose(outputErrors)
+    );
+  }
 }

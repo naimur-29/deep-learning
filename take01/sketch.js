@@ -1,15 +1,14 @@
 let brain;
 
 function setup() {
-  createCanvas(400, 400);
+  brain = new NeuralNet(2, 2, 2);
 
-  brain = new NeuralNetwork(2, 2, 1);
+  let X = [0, 1];
+  let Y = [1, 0];
 
-  let inputs = [1, 0];
-  let output = brain.forward([inputs]);
+  brain.train(X, Y);
+  let output = brain.forward(X);
   console.log(output);
 }
 
-function draw() {
-  background(51);
-}
+function draw() {}
