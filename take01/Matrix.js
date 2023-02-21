@@ -1,32 +1,25 @@
 class Matrix {
-  constructor(rows, cols, fill = 0) {
+  constructor(rows = 1, cols = 1, fill = 0) {
     this.rows = rows;
     this.cols = cols;
     this.data = [];
 
     for (let i = 0; i < this.rows; i++) {
-      this.data.push([]);
-      for (let j = 0; j < this.cols; j++) {
-        this.data[i][j] = fill;
-      }
+      this.data.push(new Array(this.cols));
+      this.data[i].fill(fill);
     }
   }
 
   /////////// REGULAR FUNCTIONS ///////////
   // copy the matrix given:
+  print() {
+    console.table(this.data);
+  }
+
   copy(m) {
     this.rows = m.rows;
     this.cols = m.cols;
     this.data = m.data;
-  }
-
-  // randomize the values:
-  randomize() {
-    for (let i = 0; i < this.rows; i++) {
-      for (let j = 0; j < this.cols; j++) {
-        this.data[i][j] = Math.floor(Math.random() * 9 + 1);
-      }
-    }
   }
 
   // rows = cols & cols = rows:
@@ -40,6 +33,16 @@ class Matrix {
     }
 
     this.copy(res);
+  }
+
+  // map a function to the data of instance
+  map(func) {
+    for (let i = 0; i < this.rows; i++) {
+      for (let j = 0; j < this.cols; j++) {
+        let val = this.data[i][j];
+        this.data[i][j] = func(val, i, j);
+      }
+    }
   }
 
   // return the addition result:
@@ -101,17 +104,17 @@ class Matrix {
   }
 
   /////////// STATIC FUNCTIONS ///////////
-  // randomize the values:
-  static randomize(a) {
-    let res = new Matrix(a.rows, a.cols);
-
-    for (let i = 0; i < a.rows; i++) {
-      for (let j = 0; j < a.cols; j++) {
-        res.data[i][j] = Math.floor(Math.random() * 9 + 1);
-      }
-    }
+  // array -> matrix:
+  static fromArray(arr) {
+    let res = new Matrix(arr.length, arr[0]?.length);
+    res.data = [...arr];
 
     return res;
+  }
+
+  // matrix -> array:
+  static toArray(matrix) {
+    return [...matrix.data];
   }
 
   // rows = cols & cols = rows:
