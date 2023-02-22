@@ -8,17 +8,31 @@ function guess(output, pos, stepSize) {
   let maxOutput = max(output);
 
   if (output[0] === maxOutput) {
-    console.log("up");
+    // console.log("up");
     pos.y -= stepSize;
   } else if (output[1] === maxOutput) {
-    console.log("right");
+    // console.log("right");
     pos.x += stepSize;
   } else if (output[2] === maxOutput) {
-    console.log("bottom");
+    // console.log("bottom");
     pos.y += stepSize;
   } else {
-    console.log("left");
+    // console.log("left");
     pos.x -= stepSize;
+  }
+}
+
+function printGuess(output) {
+  let maxOutput = max(output);
+
+  if (output[0] === maxOutput) {
+    console.log("up");
+  } else if (output[1] === maxOutput) {
+    console.log("right");
+  } else if (output[2] === maxOutput) {
+    console.log("bottom");
+  } else {
+    console.log("left");
   }
 }
 
@@ -64,13 +78,14 @@ function setup() {
   createCanvas(400, 400);
   background(51);
 
-  brain = new NeuralNet(4, 6, 4);
+  brain = new NeuralNet(4, 100, 4);
+  brain.setLearningRate(0.01);
 
   let X = [250.121, 10.23, 100.23, 143.123];
   let Y = [1, 0, 0, 0];
 
   brain.train(X, Y);
-  let output = brain.forward(X);
+  let [output] = brain.forward(X);
   console.log(output);
 
   foodPos = createVector(random(10, width - 10), random(10, height - 10));
@@ -82,7 +97,7 @@ function draw() {
   frameCount++;
 
   stroke(255);
-  strokeWeight(10);
+  strokeWeight(stepSize);
   point(foodPos.x, foodPos.y);
 
   noStroke();
@@ -91,14 +106,24 @@ function draw() {
   rect(playerPos.x, playerPos.y, stepSize, stepSize);
 
   // update player pos:
+  let x = [foodPos.x, foodPos.y, playerPos.x, playerPos.y];
+  let y = getCorrectMove(foodPos, playerPos, stepSize);
   if (frameCount % 1 === 0) {
-    let x = [foodPos.x, foodPos.y, playerPos.x, playerPos.y];
-    // let yPredicted = brain.forward(x);
-    let yPredicted = getCorrectMove(foodPos, playerPos, stepSize);
+    let [yPredicted] = brain.forward(x);
+    printGuess(yPredicted);
+
     guess(yPredicted, playerPos, stepSize);
   }
 
-  if (foodPos.dist(playerPos) < stepSize) {
-    foodPos = createVector(random(10, width - 10), random(10, height - 10));
+  for (let index = 0; index < 100; index++) {
+    brain.train(x, y);
+  }
+
+  if (foodPos.dist(playerPos) <= stepSize) {
+    // noLoop();
+    foodPos = createVector(
+      Math.floor(random(stepSize, width - stepSize) / stepSize) * stepSize,
+      Math.floor(random(stepSize, height - stepSize) / stepSize) * stepSize
+    );
   }
 }

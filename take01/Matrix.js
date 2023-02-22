@@ -77,7 +77,7 @@ class Matrix {
     // if n is another matrix:
     if (n instanceof Matrix) {
       if (n.rows !== this.rows || n.cols !== this.cols) {
-        console.log("invalid matrix to add with!");
+        console.log("invalid matrix to subtract from!");
         return undefined;
       }
 
@@ -95,6 +95,15 @@ class Matrix {
     for (let i = 0; i < this.rows; i++) {
       for (let j = 0; j < this.cols; j++) {
         this.data[i][j] -= n;
+      }
+    }
+  }
+
+  // return the multiplication result:
+  multNormal(n) {
+    for (let i = 0; i < this.rows; i++) {
+      for (let j = 0; j < this.cols; j++) {
+        this.data[i][j] *= n.data[i][j];
       }
     }
   }
@@ -131,21 +140,40 @@ class Matrix {
   }
 
   /////////// STATIC FUNCTIONS ///////////
-  // array -> matrix:
-  static fromArray(arr) {
-    if (!arr[0].length) {
-      arr = [arr];
-    }
+  // map a function to the data of instance
+  static map(m, func) {
+    let res = new Matrix(m.rows, m.cols);
 
-    let res = new Matrix(arr.length, arr[0]?.length);
-    res.data = [...arr];
+    for (let i = 0; i < res.rows; i++) {
+      for (let j = 0; j < res.cols; j++) {
+        let val = m.data[i][j];
+        res.data[i][j] = func(val, i, j);
+      }
+    }
 
     return res;
   }
 
+  // array -> matrix:
+  static fromArray(arr) {
+    let m = new Matrix(arr.length);
+    for (let i = 0; i < arr.length; i++) {
+      m.data[i][0] = arr[i];
+    }
+
+    return m;
+  }
+
   // matrix -> array:
   static toArray(matrix) {
-    return [...matrix.data];
+    let arr = [];
+    for (let i = 0; i < matrix.rows; i++) {
+      for (let j = 0; j < matrix.cols; j++) {
+        arr.push(matrix.data[i][j]);
+      }
+    }
+
+    return arr;
   }
 
   // rows = cols & cols = rows:
@@ -196,7 +224,7 @@ class Matrix {
     // if b is another matrix:
     if (b instanceof Matrix) {
       if (b.rows !== a.rows || b.cols !== a.cols) {
-        console.log("invalid matrix to add with!");
+        console.log("invalid matrix to subtract from!");
         return a;
       }
 
