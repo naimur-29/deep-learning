@@ -78,8 +78,8 @@ function setup() {
   createCanvas(400, 400);
   background(51);
 
-  brain = new NeuralNet(4, 100, 4);
-  brain.setLearningRate(0.01);
+  brain = new NeuralNet(4, 6, 4);
+  brain.setLearningRate(0.1);
 
   let X = [250.121, 10.23, 100.23, 143.123];
   let Y = [1, 0, 0, 0];
@@ -115,12 +115,11 @@ function draw() {
     guess(yPredicted, playerPos, stepSize);
   }
 
-  for (let index = 0; index < 100; index++) {
+  for (let index = 0; index < 10; index++) {
     brain.train(x, y);
   }
 
   if (foodPos.dist(playerPos) <= stepSize) {
-    // noLoop();
     foodPos = createVector(
       Math.floor(random(stepSize, width - stepSize) / stepSize) * stepSize,
       Math.floor(random(stepSize, height - stepSize) / stepSize) * stepSize
