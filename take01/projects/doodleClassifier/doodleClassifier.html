@@ -14,8 +14,45 @@
     <!-- import local scripts -->
     <script src="../../NeuralNet.js" defer></script>
     <script src="../../Matrix.js" defer></script>
+
+    <style>
+      body {
+        background-color: #00153f;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column-reverse;
+        gap: 30px;
+      }
+
+      .box {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 10px;
+        color: #fff;
+        width: 200px;
+        list-style: none;
+        background-color: #fff3;
+        padding: 5px;
+      }
+
+      .box .item {
+        padding-left: 10px;
+        width: 100%;
+        font-size: 1.2rem;
+      }
+    </style>
   </head>
   <body>
-    <script src="./doodleClassifier.js"></script>
+    <script src="./doodleClassifier.js" defer></script>
+
+    <ul class="box">
+      <li class="item">0</li>
+      <li class="item">0</li>
+      <li class="item">0</li>
+      <li class="item">0</li>
+    </ul>
   </body>
 </html>
